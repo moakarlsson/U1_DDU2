@@ -1,5 +1,12 @@
 // Recommended: All functions declared here
-
+function cityContainer (targetCityName) {
+    for (let city of cities) {
+        if (city.name == targetCityName) {
+            return city; 
+        }
+    }
+    return null; 
+}
 
 // Recommended: constants with references to existing HTML-elements
 const changeTabName = document.querySelector("title");
@@ -13,14 +20,18 @@ const div = document.querySelector("div");
 // Recommended: Ask for the city name and then the rest of the code
 
 const targetCityName = prompt ("Vilken stad?");
-for (let city of cities) {
-    citiesDiv.innerHTML+= `<p class="cityBox">${city.name}</>`;
-    if (targetCityName == city.name) {
-        h2.textContent = city.name + " " + "(" + city.country + ")";
-    } else {
-        h2.textContent = targetCityName + "finns inte i databasen";
-    }  
+
+if (cityContainer(targetCityName) == null) {
+    h2.textContent = targetCityName + " finns inte i databasen! ";
+} else {
+    h2.textContent = targetCityName + " (" + cityContainer(targetCityName).country + ")";
 }
+for (let city of cities) {
+    citiesDiv.innerHTML+= `<p class="cityBox">${city.name}</p>`;
+    
+}
+
+
  
 
 
