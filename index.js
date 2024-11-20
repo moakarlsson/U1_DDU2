@@ -1,7 +1,7 @@
 
 function cityContainer (targetCityName) {
     for (let city of cities) {
-        if (city.name == targetCityName) {
+        if (targetCityName == city.name) {
             return city; 
         }
     }
@@ -25,37 +25,62 @@ const matchingCity = cityContainer(targetCityName);
 if (matchingCity == null) {
     h2.textContent = `${targetCityName} finns inte i databasen!`
     document.title = "Not found"; 
+    h3.textContent= "";
 } else {
     h2.textContent = `${matchingCity.name} (${matchingCity.country})`;
     document.title = `${matchingCity.name}`; 
+    const closestCity = getClosestCity(matchingCity);
+    const farthestCity = getFarthestCity(matchingCity);
+    h3.textContent = `Av städerna i databsen så ligger  ${closestCity ? closestCity.name : "Ingen"} närmast och ${farthestCity ? farthestCity.name : "Ingen"} längst bort`;
 }
 
 
-for (let city of cities) {
-    citiesDiv.innerHTML += `<p class="cityBox">${city.name}</p>`; 
-}
 
-tablediv.innerHTML = `<p class = "cell"></p>`;
 
-for (let city of cities){
-    tablediv.innerHTML += `<p class ="cell head_row">${city.id}</p>`;
-}
+ for (let city of cities) {
+    const cityElement = document.createElement ("p");
+    cityElement.classList.add("cityBox");
+    cityElement.textContent = city.name;
+    citiesDiv.appendChild(cityElement);
+ }
 
-for (let city of cities) {
-    tablediv.innerHTML += `<p class= "cell head_column">${city.id}-${city.name}</p>`;
+ const emptyCell = document.createElement("p");
+ emptyCell.classList.add("cell");
+ tablediv.appendChild(emptyCell);
 
-    tablediv.innerHTML += `<p class ="cell"></p>`;
-    for (let keys of distances) {
-        const pCell = document.createElement("p");
-        if (keys.city1 == city.id || keys.city2 == city.id) {
-            tablediv.appendChild(pCell);
-            pCell.classList.add("cell");
-            pCell.textContent = keys.distance / 10 ;
-        }
-        
-    }
-  
-}
+ for (let city of cities){
+    const idCell = document.createElement ("p");
+    idCell.classList.add("cell","head_row");
+    idCell.textContent = city.id;
+    tablediv.appendChild(idCell);
+ }
+
+ for (let city of cities) {
+    const cityCell = document.createElement("p");
+    cityCell.classList.add("cell", "head_column");
+    cityCell.textContent = `${city.id}-${city.name}`;
+    tablediv.appendChild(cityCell);
+
+    const emptyDistancecell = document.createElement("p");
+    emptyDistancecell.classList.add("cell");
+    tablediv.appendChild(emptyDistancecell);
+     
+    
+     for (let keys of distances) {
+         if (keys.city1 == city.id || keys.city2 == city.id) {
+             const distanceCell = document.createElement("p");
+             distanceCell.classList.add("cell");
+             distanceCell.textContent = keys.distance / 10;
+             tablediv.appendChild(distanceCell);
+         }  
+     } 
+ }
+
+
+
+
+
+
 
 
 
