@@ -69,13 +69,27 @@ if (matchingCity == null) {
     h3.textContent = `Av städerna i databsen så ligger  ${closestCity ? closestCity.name : "Ingen"} närmast och ${farthestCity ? farthestCity.name : "Ingen"} längst bort`;
 }
 
+const closestCity = getClosestCity(matchingCity);
+const furthestCity = getFurthestCity(matchingCity);
 
  for (let city of cities) {
     const cityElement = document.createElement ("p");
     cityElement.classList.add("cityBox");
     cityElement.textContent = city.name;
     citiesDiv.appendChild(cityElement);
+    if (targetCityName == city.name){
+        cityElement.classList.add("target"); 
+    } 
+    if (closestCity && closestCity.name === city.name) {
+        cityElement.classList.add("closest");
+    }
+    if (furthestCity && furthestCity.name === city.name) {
+        cityElement.classList.add("furthest");
+
+    }
+  
     
+
  }
 
  const emptyCell = document.createElement("p");
@@ -116,6 +130,10 @@ if (matchingCity == null) {
         }
     }
  }
+
+
+
+
 
 
 //   for (let city of cities){
