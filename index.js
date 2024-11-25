@@ -9,6 +9,8 @@ const tablediv = document.getElementById("table");
 const targetCityName = prompt ("Vilken stad?");
 const cityFound = searchCity (targetCityName);
 
+createTable()
+
 createAllCityBoxes();
 // Första funktionen för att svid anrop skapa boxarna för städerna
 function createAllCityBoxes() {
@@ -39,30 +41,6 @@ function markCityBox(kindOfCity, cityObject) {
      }
   }
 }
-
-if (cityFound == null){ // om staden inte matchar en stad i databasen = null och else körs.
-    h2.textContent = `${targetCityName} finns inte i databasen!`;
-    h3.textContent = "";
-    document.title = "Not found";
-
-} else {
-    h2.textContent = `${cityFound.name} (${cityFound.country})`; // cityfound ( Stadens namn) och cityFound (Landet)
-    document.title = cityFound.name;
-    markCityBox("target", cityFound);
-}
-
-const closestCity = getClosestCity(cityFound); //   Anropar funktionen getClosestCity
-const farthestCity = getFurthestCity(cityFound); // Anropar funktionen getFurthestCity
-
-if (closestCity) {
-    markCityBox("closest", closestCity); //anropar funktionrn markCityBox med två argument.
-}
-
-if (farthestCity) {
-    markCityBox("furthest", farthestCity); //anropar funktionen markcitybox med två argument. 
-}
-
-
 
 function getClosestCity(targetCity) {
     let closestCity = null;
@@ -110,33 +88,47 @@ if (cityFound == null) {
     document.title = `${cityFound.name}`; 
     const closestCity = getClosestCity(cityFound);
     const farthestCity = getFurthestCity(cityFound);
+    markCityBox("target", cityFound);
     h3.textContent = `Av städerna i databasen så ligger ${ closestCity.name } närmast och ${farthestCity.name} längst bort.`;
 }
 
+const closestCity = getClosestCity(cityFound); //   Anropar funktionen getClosestCity
+const farthestCity = getFurthestCity(cityFound); // Anropar funktionen getFurthestCity
 
+if (closestCity) {
+    markCityBox("closest", closestCity); //anropar funktionrn markCityBox med två argument.
+}
+
+if (farthestCity) {
+    markCityBox("furthest", farthestCity); //anropar funktionen markcitybox med två argument. 
+}
+
+
+
+function createTable(){
 const emptyCell = document.createElement("p");
 emptyCell.classList.add("cell");
 tablediv.appendChild(emptyCell);
 
-    for (let city of cities){
-     const idCell = document.createElement ("p");
-     idCell.classList.add("cell", "head_row");
-     idCell.textContent = city.id;
-     tablediv.appendChild(idCell);
-     
- }
- 
- for (let cityRow of cities){
+for (let city of cities){
+    const idCell = document.createElement ("p");
+    idCell.classList.add("cell", "head_row");
+    idCell.textContent = city.id;
+    tablediv.appendChild(idCell);
+    
+}
+
+for (let cityRow of cities){
     let classEvenrows = "";
     if (cityRow.id % 2 == 0) {
-       classEvenrows= "even_row";
- }
-        
-     const cityCell = document.createElement("p");
-     cityCell.classList.add("cell", "head_column");
-     cityCell.textContent = ` ${cityRow.id}-${cityRow.name}`;
-     cityCell.classList.add("even_row");
-     tablediv.appendChild(cityCell);
+     classEvenrows= "even_row";
+    }
+
+ const cityCell = document.createElement("p");
+ cityCell.classList.add("cell", "head_column");
+ cityCell.textContent = ` ${cityRow.id}-${cityRow.name}`;
+ cityCell.classList.add("even_row");
+ tablediv.appendChild(cityCell);
 
     for (let cityColumn of cities) {
         let classEvenCols = "";
@@ -144,19 +136,35 @@ tablediv.appendChild(emptyCell);
             classEvenCols = "even_col";
         }
     
-    
         if (cityRow.id == cityColumn.id) {
             tablediv.innerHTML += `<p class= "cell ${classEvenrows}" ${classEvenCols}</p>`;
         } else{
             let match = distances.filter(d => d.city1 == cityRow.id && d.city2 == cityColumn.id || d.city1 == cityColumn.id && d.city2 == cityRow.id)[0]
                 tablediv.innerHTML += `<p class="cell ${classEvenrows} ${classEvenCols}">${match.distance / 10}</p>`   
         }
-    }
- }
+     }
+   }
+}
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*function cityContainer (targetCityName) {
     for (let city of cities) {
         if (targetCityName == city.name) {
             return city; 
