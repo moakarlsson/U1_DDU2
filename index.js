@@ -10,7 +10,6 @@ const targetCityName = prompt ("Vilken stad?");
 const cityFound = searchCity (targetCityName);
 
 createTable()
-
 createAllCityBoxes();
 // Första funktionen för att svid anrop skapa boxarna för städerna
 function createAllCityBoxes() {
@@ -86,23 +85,20 @@ if (cityFound == null) {
 } else {
     h2.textContent = `${cityFound.name} (${cityFound.country})`;
     document.title = `${cityFound.name}`; 
+    markCityBox("target", cityFound);
     const closestCity = getClosestCity(cityFound);
     const farthestCity = getFurthestCity(cityFound);
-    markCityBox("target", cityFound);
-    h3.textContent = `Av städerna i databasen så ligger ${ closestCity.name } närmast och ${farthestCity.name} längst bort.`;
+     h3.textContent = `Av städerna i databasen så ligger ${ closestCity.name } närmast och ${farthestCity.name} längst bort.`;
+
+
+     if (closestCity) {
+        markCityBox("closest", closestCity); //anropar funktionrn markCityBox med två argument.
+    }
+    
+    if (farthestCity) {
+        markCityBox("furthest", farthestCity); //anropar funktionen markcitybox med två argument. 
+    }
 }
-
-const closestCity = getClosestCity(cityFound); //   Anropar funktionen getClosestCity
-const farthestCity = getFurthestCity(cityFound); // Anropar funktionen getFurthestCity
-
-if (closestCity) {
-    markCityBox("closest", closestCity); //anropar funktionrn markCityBox med två argument.
-}
-
-if (farthestCity) {
-    markCityBox("furthest", farthestCity); //anropar funktionen markcitybox med två argument. 
-}
-
 
 
 function createTable(){
@@ -135,12 +131,14 @@ for (let cityRow of cities){
         if ( cityColumn.id % 2 === 0) {
             classEvenCols = "even_col";
         }
+
+        let cellClass = `cell ${classEvenrows} ${classEvenCols}`;
     
         if (cityRow.id == cityColumn.id) {
-            tablediv.innerHTML += `<p class= "cell ${classEvenrows}" ${classEvenCols}</p>`;
+            tablediv.innerHTML += `<p class="${cellClass}"></p>`;
         } else{
             let match = distances.filter(d => d.city1 == cityRow.id && d.city2 == cityColumn.id || d.city1 == cityColumn.id && d.city2 == cityRow.id)[0]
-                tablediv.innerHTML += `<p class="cell ${classEvenrows} ${classEvenCols}">${match.distance / 10}</p>`   
+            tablediv.innerHTML += `<p class="${cellClass}">${match.distance / 10}</p>`;
         }
      }
    }
