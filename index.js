@@ -32,11 +32,20 @@ function searchCity (targetCityName) { // funktion för att markera och hitta ta
     return null; 
 }
 
-function markCityBox(kindOfCity, cityObject) {
+function markCityBox(kindOfCity, cityObject, distance = null) {
     const cityElements = document.querySelectorAll(".cityBox")
     for (let cityElement of cityElements) { 
        if (cityElement.textContent === cityObject.name) {
         cityElement.classList.add(kindOfCity);
+
+        if (kindOfCity == "closest" && distance !== null){
+            cityElement.innerHTML += ` ligger ${distance} mil bort`;
+
+        }
+
+        if (kindOfCity == "furthest" && distance !== null){
+            cityElement.innerHTML += ` ligger ${distance} mil bort`;
+        }
      }
   }
 }
@@ -56,7 +65,7 @@ function getClosestCity(targetCity) {
             }
         }
     }
-    return closestCity
+    return {city: closestCity, distance: minDistance};
 }
 
 function getFurthestCity(targetCity) {
@@ -75,7 +84,7 @@ function getFurthestCity(targetCity) {
         }
     }
 
-    return farthestCity;
+    return {city: farthestCity, distance: maxDistance};
 }
 
 if (cityFound == null) {
@@ -86,18 +95,15 @@ if (cityFound == null) {
     h2.textContent = `${cityFound.name} (${cityFound.country})`;
     document.title = `${cityFound.name}`; 
     markCityBox("target", cityFound);
-    const closestCity = getClosestCity(cityFound);
-    const farthestCity = getFurthestCity(cityFound);
-     h3.textContent = `Av städerna i databasen så ligger ${ closestCity.name } närmast och ${farthestCity.name} längst bort.`;
+    const {city: closestCity, distance: minDistance} = getClosestCity(cityFound);
+    markCityBox("closest", closestCity, minDistance /10);
+    const {city: farthestCity, distance: maxDistance} = getFurthestCity(cityFound);
+    markCityBox("furthest", farthestCity, maxDistance /10); //anropar funktionen markcitybox med två argument. 
 
 
-     if (closestCity) {
-        markCityBox("closest", closestCity); //anropar funktionrn markCityBox med två argument.
-    }
+    h3.textContent = `Av städerna i databasen så ligger ${ closestCity.name } närmast och ${farthestCity.name} längst bort.`;
+        
     
-    if (farthestCity) {
-        markCityBox("furthest", farthestCity); //anropar funktionen markcitybox med två argument. 
-    }
 }
 
 
