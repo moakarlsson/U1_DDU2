@@ -1,4 +1,4 @@
-//Funktion för att hitta cityName
+
 const h2 = document.querySelector("h2");
 const h3 = document.querySelector("h3");
 const citiesDiv = document.getElementById("cities");
@@ -9,7 +9,6 @@ const cityFound = searchCity (targetCityName);
 
 createTable()
 createAllCityBoxes();
-
 
 function createAllCityBoxes() {
     citiesDiv.innerHTML = "";
@@ -84,11 +83,15 @@ function getFurthestCity(targetCity) {
 }
 
 function findDistance(city1Id, city2Id) {
-    const match = distances.find(
-        d => (d.city1 === city1Id && d.city2 === city2Id) || 
-             (d.city1 === city2Id && d.city2 === city1Id)
-    );
-    return match ? match.distance : null;
+    for (let d of distances) {
+        if (
+            (d.city1 === city1Id && d.city2 === city2Id) ||
+            (d.city1 === city2Id && d.city2 === city1Id)
+        ) {
+            return d.distance; 
+        }
+    }
+    return null;
 }
 
 if (cityFound == null) {
