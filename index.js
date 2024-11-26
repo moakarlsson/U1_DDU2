@@ -149,22 +149,6 @@ for (let cityRow of cities){
  }
 
 
-  /*for (let cityColumn of cities) {
-        let classEvenCols = "";
-        if ( cityColumn.id % 2 === 0) {
-            classEvenCols = "even_col";
-        }
-
-        let cellClass = `cell ${classEvenrows} ${classEvenCols}`;
-    
-        if (cityRow.id == cityColumn.id) {
-            tablediv.innerHTML += `<p class="${cellClass}"></p>`;
-        } else{
-            let match = distances.filter(d => d.city1 == cityRow.id && d.city2 == cityColumn.id || d.city1 == cityColumn.id && d.city2 == cityRow.id)[0]
-            tablediv.innerHTML += `<p class="${cellClass}">${match.distance / 10}</p>`;
-        }
-     }
-   } */
 
 
 
