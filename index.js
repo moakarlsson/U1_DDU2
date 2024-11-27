@@ -11,16 +11,13 @@ createTable()
 createAllCityBoxes();
 
 function createAllCityBoxes() {
-    citiesDiv.innerHTML = "";
     for (let city of cities) { 
         const cityElement = document.createElement("p");
         cityElement.textContent = city.name; 
         cityElement.classList.add("cityBox"); 
         citiesDiv.appendChild(cityElement); 
-    
     } 
 }
-
 function searchCity (targetCityName) { 
     for (let city of cities) {
         if (city.name === targetCityName) {
@@ -29,7 +26,6 @@ function searchCity (targetCityName) {
     }
     return null; 
 }
-
 function markCityBox(kindOfCity, cityObject, distance = null) {
     const cityElements = document.querySelectorAll(".cityBox")
     for (let cityElement of cityElements) { 
@@ -45,50 +41,69 @@ function markCityBox(kindOfCity, cityObject, distance = null) {
      }
   }
 }
-
 function getClosestCity(targetCity) {
     let closestCity = null;
     let minDistance = Infinity;
 
     for (let counter of distances) {
         if (counter.city1 === targetCity.id || counter.city2 === targetCity.id) {
-            const otherCityId = counter.city1 === targetCity.id ? counter.city2 : counter.city1;
-            const otherCity = cities.find(city => city.id === otherCityId);
+            let otherCityId;
 
+            if (counter.city1 === targetCity.id) {
+                otherCityId = counter.city2;
+            } else {
+                otherCityId = counter.city1;
+            }
+            let otherCity = null;
+            for (let city of cities) {
+                if (city.id === otherCityId) {
+                    otherCity = city;
+                    break; 
+                }
+            }
             if (counter.distance < minDistance) {
                 minDistance = counter.distance;
                 closestCity = otherCity;
             }
         }
     }
-    return {city: closestCity, distance: minDistance};
+    return { city: closestCity, distance: minDistance };
 }
-
 function getFurthestCity(targetCity) {
     let farthestCity = null;
     let maxDistance = -Infinity;
 
     for (let counter of distances) {
         if (counter.city1 === targetCity.id || counter.city2 === targetCity.id) {
-            const otherCityId = counter.city1 === targetCity.id ? counter.city2 : counter.city1;
-            const otherCity = cities.find(city => city.id === otherCityId);
+            let otherCityId;
 
+            if (counter.city1 === targetCity.id) {
+                otherCityId = counter.city2;
+            } else {
+                otherCityId = counter.city1;
+            }
+            let otherCity = null;
+            for (let city of cities) {
+                if (city.id === otherCityId) {
+                    otherCity = city;
+                    break; 
+                }
+            }
             if (counter.distance > maxDistance) {
                 maxDistance = counter.distance;
                 farthestCity = otherCity;
             }
         }
     }
-    return {city: farthestCity, distance: maxDistance};
+    return { city: farthestCity, distance: maxDistance };
 }
-
 function findDistance(city1Id, city2Id) {
-    for (let d of distances) {
+    for (let distanceObject of distances) {
         if (
-            (d.city1 === city1Id && d.city2 === city2Id) ||
-            (d.city1 === city2Id && d.city2 === city1Id)
+            (distanceObject.city1 === city1Id && distanceObject.city2 === city2Id) ||
+            (distanceObject.city1 === city2Id && distanceObject.city2 === city1Id)
         ) {
-            return d.distance; 
+            return distanceObject.distance; 
         }
     }
     return null;
@@ -105,12 +120,10 @@ if (cityFound == null) {
     const {city: closestCity, distance: minDistance} = getClosestCity(cityFound);
     markCityBox("closest", closestCity, minDistance /10);
     const {city: farthestCity, distance: maxDistance} = getFurthestCity(cityFound);
-    markCityBox("furthest", farthestCity, maxDistance /10); //anropar funktionen markcitybox med två argument. 
+    markCityBox("furthest", farthestCity, maxDistance /10);
 
     h3.textContent = `Av städerna i databasen så ligger ${ closestCity.name } närmast och ${farthestCity.name} längst bort.`;        
 }
-
-
 function createTable(){
 const emptyCell = document.createElement("p");
 emptyCell.classList.add("cell");
@@ -120,36 +133,48 @@ for (let city of cities){
     const idCell = document.createElement ("p");
     idCell.classList.add("cell", "head_row");
     idCell.textContent = city.id;
-    tablediv.appendChild(idCell);
-    
+    tablediv.appendChild(idCell); 
 }
 
-for (let cityRow of cities){
-    let classEvenrows = "";
-    if (cityRow.id % 2 == 0) {
-     classEvenrows= "even_row";
+for (let cityRow of cities) {
+    let classEvenrows;
+    if (cityRow.id % 2 === 0){
+        classEvenrows= "even_row";
+    } else{
+        classEvenrows = "";
     }
 
- const cityCell = document.createElement("p");
- cityCell.classList.add("cell", "head_column");
- cityCell.textContent = ` ${cityRow.id}-${cityRow.name}`;
- cityCell.classList.add("even_row");
- tablediv.appendChild(cityCell);
+    const cityCell = document.createElement("p");
+    cityCell.classList.add("cell", "head_column");
+    cityCell.textContent = ` ${cityRow.id}-${cityRow.name}`;
+    cityCell.classList.add("even_row");
+    tablediv.appendChild(cityCell);
 
  for (let cityColumn of cities) {
-    let classEvenCols = cityColumn.id % 2 == 0 ? "even_col" : "";
-    let cellClass = `cell ${classEvenrows} ${classEvenCols}`;
+        let classEvenCols;
+        if (cityColumn.id % 2 === 0){
+            classEvenCols = "even_col";
+        } else {
+            classEvenCols = "";
+        }
+        let cellClass = `cell ${classEvenrows} ${classEvenCols}`;
 
     if (cityRow.id === cityColumn.id) {
         tablediv.innerHTML += `<p class="${cellClass}"></p>`;
     } else {
         const distance = findDistance(cityRow.id, cityColumn.id);
-        const cellContent = distance ? (distance / 10) : "";
+        
+        let cellContent;
+        if (distance) {
+            cellContent = distance / 10;
+        } else {
+            cellContent = "";
+        }
         tablediv.innerHTML += `<p class="${cellClass}">${cellContent}</p>`;
     }
    }
   }   
- }
+}
 
 
 
